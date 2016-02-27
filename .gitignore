@@ -2,3 +2,5 @@
 /vendor/twig
 /Tests/autoload.php
 /phpunit.xml
+
+.idea
