@@ -1,7 +1,7 @@
 <?php
 namespace RtxLabs\LiquibaseBundle\Runner;
+use Symfony\Component\HttpKernel\Util\Filesystem;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Filesystem\Filesystem;
 
 class LiquibaseRunner
 {
@@ -14,14 +14,14 @@ class LiquibaseRunner
         $this->dbConnection = $dbConnection;
     }
 
-    public function runAppUpdate(\Symfony\Component\HttpKernel\KernelInterface $kernel, $dryRun)
+    public function runAppUpdate(\Symfony\Component\HttpKernel\KernelInterface $kernel)
     {
-        $this->runUpdate($kernel->getRootDir().'/Resources/liquibase/changelog-master.xml', $dryRun);
+        $this->runUpdate($kernel->getRootDir().'/Resources/liquibase/changelog-master.xml');
     }
 
-    public function runBundleUpdate(\Symfony\Component\HttpKernel\Bundle\BundleInterface $bundle, $dryRun)
+    public function runBundleUpdate(\Symfony\Component\HttpKernel\Bundle\BundleInterface $bundle)
     {
-        $this->runUpdate($bundle->getPath().'/Resources/liquibase/changelog-master.xml', $dryRun);
+        $this->runUpdate($bundle->getPath().'/Resources/liquibase/changelog-master.xml');
     }
 
     public function runAppSync(\Symfony\Component\HttpKernel\KernelInterface $kernel, $dryRun)
@@ -34,11 +34,11 @@ class LiquibaseRunner
         $this->runSync($bundle->getPath().'/Resources/liquibase/changelog-master.xml', $dryRun);
     }
 
-    private function runUpdate($changelogFile, $dryRun)
+    private function runUpdate($changelogFile)
     {
         $command = $this->getBaseCommand();
         $command .= ' --changeLogFile='.$changelogFile;
-        $command .= $dryRun?" updateSQL":" update";
+        $command .= " update";
 
         $this->run($command);
     }
@@ -51,6 +51,7 @@ class LiquibaseRunner
 
         $this->run($command);
     }
+
 
     public function runRollback($bundle)
     {
